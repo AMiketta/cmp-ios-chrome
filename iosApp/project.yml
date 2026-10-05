@@ -1,0 +1,36 @@
+# macOS only:  brew install xcodegen && cd iosApp && xcodegen generate && open CmpIosChromeSample.xcodeproj
+name: CmpIosChromeSample
+options:
+  bundleIdPrefix: dev.amiketta
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    DEVELOPMENT_TEAM: ""
+targets:
+  CmpIosChromeSample:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sample
+      - path: ../swift/CmpIosChrome
+    info:
+      path: Sample/Info.plist
+      properties:
+        CFBundleDisplayName: cmp-ios-chrome
+        CADisableMinimumFrameDurationOnPhone: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.amiketta.cmpioschrome.sample
+        FRAMEWORK_SEARCH_PATHS: "$(SRCROOT)/../sample/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+        OTHER_LDFLAGS: ["$(inherited)", "-framework", "SampleApp"]
+    preBuildScripts:
+      - name: Build Kotlin framework
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :sample:embedAndSignAppleFrameworkForXcode
+        basedOnDependencyAnalysis: false
