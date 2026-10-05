@@ -5,16 +5,18 @@ import UIKit
 struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
-            // Direction 1 (default): native UITabBarController as root via Kotlin.
-            // Direction 2 alternative:
-            // ComposeScreenView { SampleAppKt.ComposeOnlyViewController() }
+            // Primary: one Compose tree + NativeTabBar (UITabBar overlay).
+            // Advanced alternative (isolated Compose trees per tab, window-root only):
+            //   SampleAppKt.NativeTabBarControllerRoot()
+            // Direction 2 (SwiftUI host):
+            //   ComposeScreenView { SampleAppKt.ComposeOnlyViewController() }
             ComposeRootRepresentable()
                 .ignoresSafeArea()
         }
     }
 }
 
-/// Thin representable that hosts Kotlin `MainViewController()` (native tab bar root).
+/// Hosts Kotlin `MainViewController()` — ComposeUIViewController { SampleApp() }.
 private struct ComposeRootRepresentable: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         SampleAppKt.MainViewController()
